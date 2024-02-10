@@ -31,7 +31,7 @@ blueprint:
       description:
         The text-to-speech service to use when saying the message. This must match your Home
         Assistant configuration.
-      default: "google_translate_say"
+      default: "piper"
       selector:
         text:
     tts_language:
@@ -40,7 +40,6 @@ blueprint:
       default: "en"
       selector:
         text:
-
 fields:
   entity_id:
     description: The entity id of the Sonos speaker that will play the message.
@@ -230,9 +229,16 @@ sequence:
       is_volume_muted: false
 
   # FINALLY the actual call to say the message
-  - service: "{{ tts_engine }}"
-    data:
+  - service: chime_tts.say
+    target:
       entity_id: "{{ entity_group_leader }}"
+    data:
+      chime_path: bells
+      offset: 0
+      final_delay: 0
+      tts_playback_speed: 100
+      volume_level: 0.72
+      tts_platform: "{{ tts_engine }}"
       message: "{{ message }}"
       language: "{{ tts_language }}"
 
